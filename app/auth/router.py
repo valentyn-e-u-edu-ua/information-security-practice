@@ -20,6 +20,9 @@ from app.schemas import (
 )
 from app.security import hash_password, verify_password
 
+from app.crypto.encryption import blind_index
+
+
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
@@ -36,7 +39,8 @@ def _primary_role(user: User) -> str:
 def register(request: Request, user_data: UserCreate, db: Session = Depends(get_db)):
     if db.query(User).filter(User.username == user_data.username).first():
         raise HTTPException(status.HTTP_409_CONFLICT, "Username вже зайнятий")
-    if db.query(User).filter(User.email == user_data.email).first():
+    # Шифротекст Fernet щоразу різний → шукаємо за сліпим індексом (HMAC)
+    if db.query(User).filter(User.email_index == blind_index(user_data.email)).first():
         raise HTTPException(status.HTTP_409_CONFLICT, "Email вже зареєстровано")
 
     new_user = User(
