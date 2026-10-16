@@ -7,6 +7,5 @@ nginx/certs/
 reports/
 **/__pycache__
 *.pyc
-*.md
 nginx/certs/
 reports/
