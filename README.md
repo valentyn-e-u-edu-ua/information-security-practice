@@ -22,3 +22,17 @@ REST API системи «Електронний деканат» із реал�
    ```bash
    git clone [https://github.com/YOUR_USERNAME/information-security-practice.git](https://github.com/YOUR_USERNAME/information-security-practice.git)
    cd information-security-practice
+
+## Безпека та аудит
+
+Проєкт містить багаторівневу систему захисту інформації (Defense in Depth):
+* **Шифрування PII:** Персональні дані шифруються за допомогою Fernet (AES-128-CBC + HMAC-SHA256), пошук реалізовано через сліпий індекс HMAC.
+* **Аудит безпеки:** Усі критичні дії фіксуються в журналі `audit_log` за принципом 5W з автоматичним детектуванням Brute Force.
+* **Hardening:** Контейнер працює від непривілейованого користувача `appuser`, файлова система в режимі `read_only`, доступ за HTTPS забезпечує Nginx.
+
+Детальний звіт безпеки: [SECURITY_AUDIT.md](SECURITY_AUDIT.md).
+
+### Перевірка безпеки
+Для виконання автоматизованого аудиту конфігурації запустіть:
+```bash
+./scripts/security_check.sh
